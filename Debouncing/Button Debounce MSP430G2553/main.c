@@ -46,4 +46,5 @@ int main(void)
         TA0CTL = MC_0;                      // disable timer
         P1IE |= BIT3;                       // enable button interrupt
         P1IFG &= ~BIT3;                     // clear interrupt flag
+        TA0R = 0;                           //reset timer
     }
