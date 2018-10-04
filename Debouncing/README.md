@@ -1,18 +1,29 @@
 # Software Debouncing
-In previous labs, we talked about how objects such as switches can cause some nasty effects since they are actually a mechanical system at heart. We talked about the simple hardware method of debouncing, but due to the many different design constraints, you may not be able to add or adjust hardware. Debouncing is also only one of many applications which would require the use of built in Timers to allow for other processes to take place.
+Buttons are mechanical devices that are prone to mechanical errors. When the button is pressed it can sometimes "bounce" between on and off states before resting on off. These rapid switches can be registered and one button press can be registered multiple times. This code uses a timer to disable the button for a short period of time until the bounce period is over. 
 
-## Task
-You need to utilize the TIMER modules within the MSP430 processors to implement a debounced switch to control the state of an LED. You most likely will want to hook up your buttons on the development boards to an oscilloscope to see how much time it takes for the buttons to settle. The idea here is that your processor should be able to run other code, while relying on timers and interrupts to manage the debouncing in the background. *You should not be using polling techniques for this assignment.*
+# Button Interrupt
+The following code is the button interrupt that occurs when the button is pressed.
+```c
+  #pragma vector = PORT1_VECTOR
+    __interrupt void Port_1(void)
+    {
+        P1OUT ^= BIT0;                      // toggle pin 1.0 red LED
+        P1IE &= ~BIT3;                      // disable interrupt
+        TA0CTL = TASSEL_2 + MC_1;           // connect timer a to SMCLK in up mode
+    }
+```
+When this interrupt occurs it disables the button interrupt to prevent bouncing. It then starts the debounce timer.
 
-## Deliverables
-You will need to have two folders in this repository, one for each of the processors that you used for this part of the lab. Remember to replace this README with your own.
-
-### Hints
-You need to take a look at how the P1IE and P1IES registers work and how to control them within an interrupt routine. Remember that the debouncing is not going to be the main process you are going to run by the end of the lab.
-
-## Extra Work
-### Low Power Modes
-Go into the datasheets or look online for information about the low power modes of your processors and using Energy Trace, see what the lowest power consumption you can achieve while still running your debouncing code. Take a note when your processor is not driving the LED (or unplug the header connecting the LED and check) but running the interrupt routine for your debouncing.
-
-### Double the fun
-Can you expand your code to debounce two switches? Do you have to use two Timer peripherals to do this?
+# Timer Interrupt
+The follwing code is the timer interrupt that occurs when the timer register reaches a certain value.
+```c
+#pragma vector=TIMER0_A0_VECTOR
+    __interrupt void Timer_A0(void)
+    {
+        TA0CTL = MC_0;                      // disable timer
+        P1IE |= BIT3;                       // enable button interrupt
+        P1IFG &= ~BIT3;                     // clear interrupt flag
+        TA0R = 0;                           //reset timer
+    }
+```
+When the interrupt occurs it stops the clock and resets the debounce timer. It also enables the button interrupt now that it has delayed it.
