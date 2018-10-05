@@ -5,7 +5,9 @@
  * @author Nick Setaro
  * @version 10.5.2018
  *
- * Description
+ * This code uses two CCR registers on timer A0 to toggle an LED at different times. This allows
+ * for a pwm on the output LED. The button is also debounced using timer A1. This timer disables the button
+ * interrupt until the bouncing period is over when it re-enables it.
  *
  * MSP430F5529LP
  *
