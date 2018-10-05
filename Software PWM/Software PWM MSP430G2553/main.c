@@ -8,6 +8,8 @@
  * for a pwm on the output LED. The button is also debounced using timer A1. This timer disables the button
  * interrupt until the bouncing period is over when it re-enables it.
  *
+ * MSP430G2553
+ *
  */
 
 int main(void)

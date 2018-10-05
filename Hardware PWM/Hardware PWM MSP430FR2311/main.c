@@ -8,6 +8,9 @@
  *This code uses a timer to drive a pwm signal to an LED to control the brightness. A button is then used to increase the duty cycle
  *by 10% or reset to 0% if its already at 100%. The button is debounced using another timer. This button disables its interrupt when it is pressed
  *and turns the timer on. The timer then re-enables the button interrupt after a delay debouncing the button.
+ *
+ *MSP430FR2311
+ *
  */
 
 int main(void)

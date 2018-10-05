@@ -6,6 +6,8 @@
  *
  * This code uses a button to toggle the state of an LED. A timer is used to disable the button interrupt for a short time.
  * This prevents bounced button interrupts from being registered.
+ *
+ * MSP432P401R
  */
 void main(void)
 {

@@ -8,6 +8,9 @@
  * This code uses a timer to create a pwm signal. This signal drives the LED and controls its brightness.
  * When the button is pressed the duty cycle of the pwm is increased by 10% until it reaches 100%.
  * If the button is pressed at 100% duty cycle the duty cycle is reset to 0%.
+ *
+ * MSP430G2553
+ *
  */
 int main(void)
 {
@@ -39,7 +42,7 @@ int main(void)
 #pragma vector=PORT1_VECTOR
 __interrupt void Port_1(void)
 {
-    if(P1IES & BIT3){
+   if(P1IES & BIT3){
             if (TA0CCR1<1000) {             //if duty cycle did not overflow
                 TA0CCR1+=100;               //increment duty cycle by 10%
             } else if (TA0CCR1 >=1000) {    //if the duty cycle overflows
@@ -50,6 +53,10 @@ __interrupt void Port_1(void)
            P1OUT ^= BIT0;                   //toggle LED on pin 1.0
            P1IFG &= ~BIT3;                  //clear flags on button interrupt
 }
+
+
+
+
 
 
 

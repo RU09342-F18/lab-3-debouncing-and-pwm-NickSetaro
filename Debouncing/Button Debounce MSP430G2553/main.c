@@ -6,6 +6,8 @@
  *
  * This code uses a button interrupt to toggle and LED. Each button interrupt disables the interrupt. The timer
  * then re-enables the interrupt after a delay to debounce the button.
+ *
+ * MSP430G2553
  */
 
 int main(void)
